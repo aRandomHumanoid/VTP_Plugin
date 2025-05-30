@@ -20,7 +20,7 @@ import argparse
 import tkinter as tk
 
 # Vars: the important ones
-global NOZZLE_DIAM, V_STAR, H_STAR, H, E_DOT, ALPHA, FIL_AREA, THREAD_AREA
+global V_STAR, H_STAR, H, E_DOT, ALPHA, FIL_AREA, THREAD_AREA
 
 
 
@@ -155,6 +155,7 @@ if __name__ == "__main__":
     parser.add_argument("-e_dot", type=float, default=1)
     parser.add_argument("-alpha", type=float, default=1)
     parser.add_argument("-nozzle_dia", type=float, default=0.4)
+    parser.add_argument("-fil_dia", type=float, default=1.75)
     args = parser.parse_args()
 
     # V_STAR = args.v
@@ -162,9 +163,10 @@ if __name__ == "__main__":
     # E_DOT = args.e_dot
     ALPHA = args.alpha
     NOZZLE_DIAM = args.nozzle_dia
+    FIL_DIA = args.fil_dia
     gui()
     H = H_STAR * ALPHA * NOZZLE_DIAM
-    FIL_AREA = 3.1415 * ((1.75/2) ** 2)
+    FIL_AREA = 3.1415 * ((FIL_DIA/2) ** 2)
     THREAD_AREA = 3.1415 * ((ALPHA * NOZZLE_DIAM / 2) ** 2)
 
     process_gcode(
