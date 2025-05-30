@@ -117,12 +117,12 @@ def process_gcode(input_file):
     prev_x = 0
     prev_y = 0
     for line in lines:
-        params = get_line_values(line)
+        params = get_line_values(line)  # [0-2] are x, y, and z; [3] is e; [4] is f
         # new layer shifts upwards
         if " ; move to first layer point" in line and line.startswith("G1 Z"):
             logging.info("z move old: " + line)
             new_z = params[2] + H
-            line = f"G1 Z{new_z} F720 ; move to first layer point MODIFIED\n"
+            line = f"G1 Z{new_z} F{params[4]} ; move to first layer point MODIFIED\n"
             logging.info("z move new: " + line)
         # records first point to use in distance calcs
         elif " ; move to first layer point" in line:
