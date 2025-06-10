@@ -4,7 +4,7 @@ TO USE:
 
 1. Download "main.py" 
 2. Download python from https://www.python.org/downloads/
-4. Find the locatioin for python.exe and main.py
+4. Find the location for python.exe and main.py
 5. Navigate to "Output Options" under the "Print Settings" tab in PrusaSlicer
 6. Enter the following under post processing scripts: "C:\Your\Path\To\Python\python.exe" "C:\Your\Path\To\Script\main.py"
 
