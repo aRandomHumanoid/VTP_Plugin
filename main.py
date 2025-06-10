@@ -117,7 +117,7 @@ def process_gcode():
             new_x = params.x if params.x is not None else prev_x
             new_y = params.y if params.y is not None else prev_y
             mesh_number = meshes.classify_point([new_x, new_y, current_z])
-            new_z = stats.evaluate_z_at_point(new_x, new_y, params.z, mesh_number)
+            new_z = stats.evaluate_z_at_point(new_x, new_y, current_z, mesh_number)
             new_line = MoveGcodeLine(z=new_z, f=15000)
             ret.append(new_line.gcode("NEW Z MOVE"))
             continue
@@ -127,7 +127,7 @@ def process_gcode():
             prev_y = params.y
         elif " ; infill" in line:
             logging.info("old xy move: " + line)
-            new_lines = split_line(prev_x, params.x, prev_y, params.y, current_z, 5)
+            new_lines = split_line(prev_x, params.x, prev_y, params.y, current_z, 1)
             ret.extend(new_lines)
             logging.info("new xy move: " + line)
             prev_x = params.x

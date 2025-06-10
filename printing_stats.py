@@ -62,9 +62,7 @@ class PrintingStats:
 
     def evaluate_z_at_point(self, x, y, z, n):
         #H_star = self.H_star_functions[n].evalf(subs={'x': x, 'y': y, 'z': z})
-        H_star = 100
-        if int(n) == 1:
-            H_star = 200
+        H_star, _ = self.eval_funcs(x, y, z, n)
         H_new = H_star * self.alpha * self.nozzle_dia
         z_new = z + H_new - self.layer_height
         return z_new
@@ -75,12 +73,7 @@ class PrintingStats:
         x_mid = (x_start + x_end) / 2
         y_mid = (y_start + y_end) / 2
 
-        #V_star = self.V_star_functions[n].evalf(subs={'x': x_mid, 'y': y_mid, 'z': z_end})
-        #H_star = self.H_star_functions[n].evalf(subs={'x': x_mid, 'y': y_mid, 'z': z_end})
-        V_star = 0.3
-        H_star = 100
-        if int(n) == 1:
-            H_star = 200
+        V_star, H_star = self.eval_funcs(x_mid, y_mid, z_end, n)
 
         H_new = H_star * self.alpha * self.nozzle_dia
 
@@ -89,3 +82,10 @@ class PrintingStats:
         z_new = z_end + H_new - self.layer_height
 
         return z_new, e_new, f_new
+
+    def eval_funcs(self, x, y, z, n):
+        V_star = 2
+        H_star = 0.02* (x-100)**2
+        if n == 1:
+            H_star = 0.01*(x-80)**2
+        return V_star, H_star
