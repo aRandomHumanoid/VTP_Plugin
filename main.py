@@ -110,12 +110,19 @@ def process_gcode():
     prev_x = 0
     prev_y = 0
     current_z = 0
-    for line in lines:
+    for i in range(len(lines)):
+        line = lines[i]
         params = MoveGcodeLine.from_line(line)
         if " ; travel" in line and "Z" in line or " ; move" in line and "Z" in line:
             current_z = params.z
-            new_x = params.x if params.x is not None else prev_x
-            new_y = params.y if params.y is not None else prev_y
+            j = i + 1
+            while j in range(len(lines)) and " ; infill" not in lines[j]:
+                j += 1
+            if j >= len(lines):
+                continue
+            next_line = MoveGcodeLine.from_line(lines[j])
+            new_x = next_line.x
+            new_y = next_line.y
             mesh_number = meshes.classify_point([new_x, new_y, current_z])
             new_z = stats.evaluate_z_at_point(new_x, new_y, params.z, mesh_number)
             new_line = MoveGcodeLine(z=new_z, f=15000)
@@ -127,7 +134,7 @@ def process_gcode():
             prev_y = params.y
         elif " ; infill" in line:
             logging.info("old xy move: " + line)
-            new_lines = split_line(prev_x, params.x, prev_y, params.y, current_z, 5)
+            new_lines = split_line(prev_x, params.x, prev_y, params.y, current_z, 1)
             ret.extend(new_lines)
             logging.info("new xy move: " + line)
             prev_x = params.x
