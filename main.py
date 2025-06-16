@@ -104,7 +104,6 @@ def extract_value(line, value):
     else:
         return None
 
-
 def process_gcode():
     ret = []
     prev_x = 0
@@ -113,8 +112,13 @@ def process_gcode():
     for i in range(len(lines)):
         line = lines[i]
         params = MoveGcodeLine.from_line(line)
+        if "; support" in line:
+            new_line = MoveGcodeLine(x=params.x, y=params.y, z=current_z, e=params.e, f=params.f)
+            ret.append(new_line.gcode("new support "))
+            continue
+        if ";Z:" in line:
+            current_z = extract_value(line, "Z:")
         if " ; travel" in line and "Z" in line or " ; move" in line and "Z" in line:
-            current_z = params.z
             j = i + 1
             while j in range(len(lines)) and " ; infill" not in lines[j]:
                 j += 1

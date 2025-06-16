@@ -2,16 +2,11 @@ Thing for making the thing into the other thing.
 
 TO USE:
 
-1. Download "main.py" 
+1. Clone the Git Repository
 2. Download python from https://www.python.org/downloads/
-4. Find the location for python.exe and main.py
-5. Navigate to "Output Options" under the "Print Settings" tab in PrusaSlicer
-6. Enter the following under post processing scripts: "C:\Your\Path\To\Python\python.exe" "C:\Your\Path\To\Script\main.py"
+3. (Optional) start a virtual environment using "python -m venv vtp-env" followed by "vtp-env\Scripts\activate"
+4. Install the required libraries using "pip install -r requirements.txt" from within the project folder
+5. Before slicing, export the build plate file (.3mf) to "test_mesh.3mf" within the project folder
+6. After slicing, export the sliced file (.gcode) to "test_mesh.gcode" within the project folder
+7. Run "main.py" and the resultant "outputtest.gcode" file should be the output
 
-The following flags can be used:
-
-- "-alpha" : thread expansion ratio : default = 1
-- "-nozzle_dia" : diameter of the nozzle : default = 0.4
-- "-fil_dia" : diameter of the filament : default = 1.75
-
-Example: "C:\Your\Path\To\Python\python.exe" "C:\Your\Path\To\Script\main.py" -alpha 1.2 -nozzle_dia 0.6 -fil_dia 1.75
