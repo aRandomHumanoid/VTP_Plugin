@@ -17,11 +17,11 @@ class MoveGcodeLine:
 
     @classmethod
     def from_line(cls, line):
-        x_match = re.search(r'X\d+(?:\.\d+)?', line)
-        y_match = re.search(r'Y\d+(?:\.\d+)?', line)
-        z_match = re.search(r'Z\d*(\.\d+)? ', line)
-        e_match = re.search(r'E\d+(?:\.\d+)?', line)
-        f_match = re.search(r'F\d+(?:\.\d+)?', line)
+        x_match = re.search(r'X\d*\.\d+', line)
+        y_match = re.search(r'Y\d*\.\d+', line)
+        z_match = re.search(r'Z\d*\.\d+', line)
+        e_match = re.search(r'E\d*\.\d+', line)
+        f_match = re.search(r'F\d*\.\d+', line)
         x = y = z = e = f = None
         if x_match is not None:
             x = float(x_match.group().removeprefix("X"))
