@@ -131,8 +131,8 @@ def split_line(x_start, x_end, y_start, y_end, z_end, increment_length):
         x_current = x_start + delta_x * (i + 1)
         y_current = y_start + delta_y * (i + 1)
         mesh_number = meshes.classify_point([x_current, y_current, z_end - stats.layer_height])
-        vals = stats.evaluate_vars(x_prev, x_current, y_prev, y_current, z_end, mesh_number)
-        new_line = MoveGcodeLine(x_current, y_current, vals[0], vals[1], vals[2])
+        z, e, f = stats.evaluate_vars(x_prev, x_current, y_prev, y_current, z_end, mesh_number)
+        new_line = MoveGcodeLine(x_current, y_current, z, e, f)
         ret.append(new_line.gcode("created lines"))
         x_prev = x_current
         y_prev = y_current
