@@ -15,7 +15,15 @@ class MeshStuff:
     def assign_mesh_numbers(self, V_star_eq, H_star_eq):
         return
 
+    def check_point(self, point):
+        if(point[1] is None):
+            print()
+        assert(point[0] is not None)
+        assert(point[1] is not None)
+        assert(point[2] is not None)
+
     def classify_point(self, point):
+        self.check_point(point)
         for name, mesh in self.meshes.items():
             if mesh.contains([point]):
                 return name

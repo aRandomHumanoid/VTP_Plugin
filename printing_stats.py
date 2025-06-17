@@ -18,6 +18,8 @@ class PrintingStats:
     thread_area = 0
     e_dot = 0
 
+    z_offset = -0.5
+
     V_star_functions = []
     H_star_functions = []
 
@@ -63,7 +65,7 @@ class PrintingStats:
     def evaluate_z_at_point(self, x, y, z, n):
         _, H_star = self.eval_funcs(x, y, z, n)
         H_new = H_star * self.alpha * self.nozzle_dia
-        z_new = z + H_new - self.layer_height
+        z_new = z + H_new - self.layer_height + self.z_offset
         return z_new
 
 
@@ -78,11 +80,11 @@ class PrintingStats:
 
         f_new = self.e_dot * V_star * self.fil_area / self.thread_area
         e_new = length * self.e_dot / f_new
-        z_new = z_end + H_new - self.layer_height
+        z_new = z_end + H_new - self.layer_height + self.z_offset
 
-        return z_new, e_new, f_new
+        return z_new, e_new, f_new,
 
     def eval_funcs(self, x, y, z, n):
-        V_star = 2
-        H_star = 20
+        V_star = 0.1 + 0.003*(x-100) + 0.003*(y-100) + 0.003*z
+        H_star = 6
         return V_star, H_star

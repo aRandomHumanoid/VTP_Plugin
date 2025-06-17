@@ -17,49 +17,13 @@ import re
 import logging
 import os
 import argparse
-import tkinter as tk
 from printing_stats import PrintingStats
 from move_gcode_line import MoveGcodeLine
 from mesh_stuff import MeshStuff
 
 # Vars: the important ones
-global V_STAR, H_STAR, H, E_DOT, ALPHA, FIL_AREA, THREAD_AREA
 global stats
-global lines
 global meshes
-
-
-def gui():
-    def on_submit():
-        global V_STAR, H_STAR, E_DOT
-        V_STAR = float(entry1.get())
-        H_STAR = float(entry2.get())
-        E_DOT = float(entry3.get())
-        root.destroy()  # Closes the window after submit
-
-    root = tk.Tk()
-    root.title("Inputs")
-    root.geometry("200x300")
-
-    # Labels
-    tk.Label(root, text="Enter V_star:").pack()
-    entry1 = tk.Entry(root)
-    entry1.pack()
-
-    tk.Label(root, text="Enter H_star:").pack()
-    entry2 = tk.Entry(root)
-    entry2.pack()
-
-    tk.Label(root, text="Enter E_dot:").pack()
-    entry3 = tk.Entry(root)
-    entry3.pack()
-
-    # Submit Button
-    submit_button = tk.Button(root, text="Submit", command=on_submit)
-    submit_button.pack()
-
-    root.mainloop()
-
 
 # Get the directory where the script is located
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -74,10 +38,13 @@ logging.basicConfig(
 )
 
 
-def overwrite_nozzle_value(nozzle_dia):
+def remove_nozzle_check(lines, nozzle_dia):
+    out = []
     for line in lines:
-        if "; nozzle_diameter = " in line:
-            line = f"; nozzle_diameter = {nozzle_dia}"
+        if "; nozzle check" in line:
+            continue
+        out.append(line)
+    return out
 
 
 def read_lines(input_file):
@@ -98,13 +65,13 @@ def write_file(out, output_file):
 
 
 def extract_value(line, value):
-    match = re.search(rf'{value}\d+(?:\.\d+)?', line)
+    match = re.search(rf'{value}(?:\d*\.\d+|\d+(?:\.\d+)?)', line)
     if match is not None:
         return float(match.group().removeprefix(value))
     else:
         return None
 
-def process_gcode():
+def process_gcode(lines):
     ret = []
     prev_x = 0
     prev_y = 0
@@ -173,15 +140,17 @@ def split_line(x_start, x_end, y_start, y_end, z_end, increment_length):
     return ret
 
 
-# Main execution
-if __name__ == "__main__":
+
+def main():
+    global meshes
+    global stats
     parser = argparse.ArgumentParser(description="Post-process G-code for Z-shifting and extrusion adjustments.")
     # parser.add_argument("input_file", help="Path to the input G-code file")
     parser.add_argument("-alpha", type=float, default=1)
     parser.add_argument("-nozzle_dia", type=float, default=0.4)
     parser.add_argument("-fil_dia", type=float, default=1.75)
     parser.add_argument("-eval_increment", type=float, default=1)
-    parser.add_argument("-e_dot", type=float, default=1)
+    parser.add_argument("-e_dot", type=float, default=250)
     args = parser.parse_args()
 
     equation_file_path = "equations.txt"
@@ -192,12 +161,10 @@ if __name__ == "__main__":
     stats = PrintingStats(lines=lines, path=equation_file_path, alpha=args.alpha, nozzle_dia=args.nozzle_dia,
                           fil_dia=args.fil_dia, e_dot=args.e_dot)
 
-    ALPHA = args.alpha
-    NOZZLE_DIAM = args.nozzle_dia
-    FIL_DIA = args.fil_dia
-    FIL_AREA = 3.1415 * ((FIL_DIA / 2) ** 2)
-    THREAD_AREA = 3.1415 * ((ALPHA * NOZZLE_DIAM / 2) ** 2)
-
-    overwrite_nozzle_value(NOZZLE_DIAM)
-    mod_lines = process_gcode()
+    mod_lines = remove_nozzle_check(lines, stats.nozzle_dia)
+    mod_lines = process_gcode(mod_lines)
     write_file(mod_lines, "outputtest.gcode")
+
+# Main execution
+if __name__ == "__main__":
+    main()
