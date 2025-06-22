@@ -1,0 +1,10 @@
+# VTP Plugin Equation File
+# Format: V*_equation; H*_equation
+# One equation pair per line
+# Variables: x, y, z (coordinates)
+
+# Example equation pair for mesh 0
+0.1 + 0.003*(x-100) + 0.003*(y-100) + 0.003*z;6
+
+# Example equation pair for mesh 1 (if you have multiple meshes)
+0.2 + 0.002*x + 0.002*y + 0.001*z;8
