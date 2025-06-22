@@ -1,0 +1,184 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vtp-plugin"
+version = "1.0.0"
+description = "Variable Thickness Printing G-code post-processor"
+readme = "README.md"
+license = {text = "GPL-3.0"}
+authors = [
+    {name = "Roman Tenger", email = "roman.tenger@example.com"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Manufacturing",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: CAD",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy>=1.20.0",
+    "sympy>=1.10.0",
+    "trimesh>=3.15.0",
+    "scipy>=1.7.0",
+    "shapely>=1.8.0",
+    "rtree>=1.0.0",
+    "networkx>=2.6.0",
+    "pillow>=8.3.0",
+    "lxml>=4.6.0",
+    "pycollada>=0.7.0",
+    "svg.path>=1.5.0",
+    "python-dateutil>=2.8.0",
+    "mpmath>=1.2.0",
+    "mapbox-earcut>=1.0.0",
+    "manifold3d>=3.0.0",
+    "vhacdx>=0.0.8",
+    "xxhash>=3.0.0",
+    "jsonschema>=4.0.0",
+    "httpx>=0.24.0",
+    "colorama>=0.4.4",
+    "colorlog>=6.6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "mypy>=1.0.0",
+    "black>=22.0.0",
+    "isort>=5.10.0",
+    "flake8>=5.0.0",
+    "pre-commit>=2.20.0",
+]
+docs = [
+    "sphinx>=5.0.0",
+    "sphinx-rtd-theme>=1.0.0",
+    "myst-parser>=0.18.0",
+]
+
+[project.scripts]
+vtp-plugin = "vtp_plugin.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/romantenger/VTP_Plugin"
+Repository = "https://github.com/romantenger/VTP_Plugin.git"
+Documentation = "https://github.com/romantenger/VTP_Plugin#readme"
+Issues = "https://github.com/romantenger/VTP_Plugin/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.txt", "*.md", "*.ini"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["vtp_plugin"]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "trimesh.*",
+    "sympy.*",
+    "numpy.*",
+    "scipy.*",
+    "shapely.*",
+    "rtree.*",
+    "networkx.*",
+    "PIL.*",
+    "lxml.*",
+    "pycollada.*",
+    "svg.*",
+    "dateutil.*",
+    "mpmath.*",
+    "mapbox_earcut.*",
+    "manifold3d.*",
+    "vhacdx.*",
+    "xxhash.*",
+    "jsonschema.*",
+    "httpx.*",
+    "colorama.*",
+    "colorlog.*",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+[tool.coverage.run]
+source = ["src/vtp_plugin"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/venv/*",
+    "*/env/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+] 
