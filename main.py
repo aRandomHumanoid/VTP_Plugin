@@ -149,7 +149,7 @@ def main():
     parser.add_argument("-alpha", type=float, default=1)
     parser.add_argument("-nozzle_dia", type=float, default=0.4)
     parser.add_argument("-fil_dia", type=float, default=1.75)
-    parser.add_argument("-eval_increment", type=float, default=1)
+    parser.add_argument("-eval_increment", type=float, default=1.5)
     parser.add_argument("-e_dot", type=float, default=250)
     args = parser.parse_args()
 
@@ -159,7 +159,7 @@ def main():
     meshes = MeshStuff(mesh_path)
     lines = read_lines(gcode_path)
     stats = PrintingStats(lines=lines, path=equation_file_path, alpha=args.alpha, nozzle_dia=args.nozzle_dia,
-                          fil_dia=args.fil_dia, e_dot=args.e_dot)
+                          fil_dia=args.fil_dia)
 
     mod_lines = remove_nozzle_check(lines, stats.nozzle_dia)
     mod_lines = process_gcode(mod_lines)

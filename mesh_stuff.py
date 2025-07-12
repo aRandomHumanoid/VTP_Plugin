@@ -1,4 +1,5 @@
 import trimesh
+import zipfile
 import numpy as np
 
 
@@ -6,6 +7,8 @@ class MeshStuff:
     meshes = None
 
     def __init__(self, path):
+        with zipfile.ZipFile(path, 'r') as z:
+            z.extractall('extracted_3mf')
         scene = trimesh.load(path, force='scene')
         unnamed_meshes = scene.to_geometry().split()
         self.meshes = {i: v for i, v in enumerate(unnamed_meshes)}  # autogenerates meshes names 1, 2 3...
